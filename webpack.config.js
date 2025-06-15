@@ -1,8 +1,8 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const path = require('path');
 
 module.exports = (env) => {
-  const isDev = env.mode === 'development'
+  const isDev = env.mode === 'development';
   return {
     mode: env.mode ?? 'development',
     entry: path.resolve(__dirname, 'src', 'index.js'),
@@ -30,5 +30,5 @@ module.exports = (env) => {
           open: true,
         }
       : undefined,
-  }
-}
+  };
+};
