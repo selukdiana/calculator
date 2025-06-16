@@ -13,7 +13,7 @@ module.exports = (env) => {
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: path.resolve(__dirname, 'public', 'index.html'),
+        template: path.resolve(__dirname, 'src', 'index.html'),
       }),
     ],
     module: {
@@ -26,9 +26,9 @@ module.exports = (env) => {
     },
     devServer: isDev
       ? {
-          port: 5000,
-          open: true,
-        }
+        port: 5000,
+        open: true,
+      }
       : undefined,
   };
 };
