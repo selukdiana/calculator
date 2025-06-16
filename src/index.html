@@ -8,27 +8,67 @@
   <body>
     <div id="root">
       <div class="calculator">
-        <p class="display">123</p>
+        <p class="display">0</p>
         <div class="keypad">
-          <button class="btn-primary">AC</button>
-          <button class="btn-primary">+/-</button>
-          <button class="btn-primary">%</button>
-          <button class="btn-accent">/</button>
-          <button>7</button>
-          <button>8</button>
-          <button>9</button>
-          <button class="btn-accent">X</button>
-          <button>4</button>
-          <button>5</button>
-          <button>6</button>
-          <button class="btn-accent">-</button>
-          <button>1</button>
-          <button>2</button>
-          <button>3</button>
-          <button class="btn-accent">+</button>
-          <button class="zero">0</button>
-          <button>,</button>
-          <button class="btn-accent">=</button>
+          <button
+            data-type="operator"
+            data-operator="all-clear"
+            class="btn-primary"
+          >
+            AC
+          </button>
+          <button
+            data-type="operator"
+            data-operator="negation"
+            class="btn-primary"
+          >
+            &plus;/&minus;
+          </button>
+          <button
+            data-type="operator"
+            data-operator="percent"
+            class="btn-primary"
+          >
+            %
+          </button>
+          <button
+            data-type="operator"
+            data-operator="divide"
+            class="btn-accent"
+          >
+            &divide;
+          </button>
+          <button data-type="digit">7</button>
+          <button data-type="digit">8</button>
+          <button data-type="digit">9</button>
+          <button
+            data-type="operator"
+            data-operator="multiply"
+            class="btn-accent"
+          >
+            &times;
+          </button>
+          <button data-type="digit">4</button>
+          <button data-type="digit">5</button>
+          <button data-type="digit">6</button>
+          <button data-type="operator" data-operator="minus" class="btn-accent">
+            &minus;
+          </button>
+          <button data-type="digit">1</button>
+          <button data-type="digit">2</button>
+          <button data-type="digit">3</button>
+          <button data-type="operator" data-operator="plus" class="btn-accent">
+            &plus;
+          </button>
+          <button data-type="digit" class="zero">0</button>
+          <button data-type="operator" data-operator="dec-point">&sdot;</button>
+          <button
+            data-type="operator"
+            data-operator="equals"
+            class="btn-accent"
+          >
+            &equals;
+          </button>
         </div>
       </div>
     </div>

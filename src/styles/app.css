@@ -34,16 +34,20 @@
 }
 
 .display {
+  display: table-cell;
   padding: 5px;
-  padding-top: 20px;
+  height: 50px;
+  max-width: 243px;
+  font-size: 20px;
   text-align: end;
-  font-size: 36px;
+  vertical-align: bottom;
+  word-break: break-all;
   color: var(--color-text);
 }
 
 .keypad {
   display: grid;
-  grid-template-columns: repeat(4, 50px);
+  grid-template-columns: repeat(4, 60px);
   grid-template-rows: repeat(5, 50px);
   gap: 1px;
 }
