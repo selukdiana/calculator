@@ -6,8 +6,10 @@ import {
   insertDecimalPoint,
   generateResult,
   insertOperator,
-} from './js/calculator';
-import './css/styles.css';
+} from './calculator';
+import '../css/index.css';
+import '../css/switch.css';
+import '../css/calculator.css';
 
 const keypad = document.querySelector('.calculator__keypad');
 
