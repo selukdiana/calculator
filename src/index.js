@@ -1,43 +1,40 @@
-import { Calculator } from './js/Calculator';
-import './styles/app.css';
+import { insertNumber, clearAll, negateNumber, insertPercent, insertDecimalPoint, generateResult, insertOperator } from './js/calculator';
+import './css/styles.css';
 
-const display = document.querySelector('.display');
 const keypad = document.querySelector('.keypad');
-
-const calculator = new Calculator(display);
 
 keypad.addEventListener('click', (e) => {
   const btn = e.target.closest('button');
   const type = btn.dataset.type;
 
   if (type === 'digit') {
-    calculator.insertNumber(btn.innerHTML);
+    insertNumber(btn.innerHTML);
   } else if (type === 'operator') {
     const operator = btn.dataset.operator;
     const value = btn.innerText;
     switch (operator) {
       case 'all-clear': {
-        calculator.clearAll();
+        clearAll();
         break;
       }
       case 'negation': {
-        calculator.negateNumber();
+        negateNumber();
         break;
       }
       case 'percent': {
-        calculator.changePercentToDecimal();
+        insertPercent();
         break;
       }
       case 'dec-point': {
-        calculator.insertDecimalPoint();
+        insertDecimalPoint();
         break;
       }
       case 'equals': {
-        calculator.generateResult();
+        generateResult();
         break;
       }
       default: {
-        calculator.insertOperator(value);
+        insertOperator(value);
         break;
       }
     }
