@@ -6,7 +6,7 @@ import {
   insertDecimalPoint,
   generateResult,
   insertOperator,
-} from './calculator';
+} from './calculator.js';
 import '../css/index.css';
 import '../css/switch.css';
 import '../css/calculator.css';
