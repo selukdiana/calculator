@@ -37,7 +37,7 @@
 }
 
 .switch__input + .switch__slider {
-  box-shadow: 0 0 3px var(--color-accent);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
 
 .switch__input:checked + .switch__slider::before {

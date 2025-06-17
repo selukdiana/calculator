@@ -177,7 +177,11 @@ const simplifyExpression = (currentExpression, operator) => {
       ...currentExpression.slice(leftOperandIndex, rightOperatorIndex + 1),
     );
 
-    currentExpression.splice(leftOperandIndex, 3, partialSolution.toString());
+    currentExpression.splice(
+      leftOperandIndex,
+      3,
+      parseFloat(partialSolution.toFixed(6)).toString(),
+    );
     return simplifyExpression(currentExpression, operator);
   }
 };
