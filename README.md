@@ -32,7 +32,7 @@ This project is a simple calculator application that performs basic arithmetic o
 *  **js/**
 > The **js/** folder is dedicated to managing the styles and visual aspects of the application.
 
-*index.js* - contains the basic logic for handling user events 
+*index.js* - contains the basic logic for handling user events  
 *calculator.js* - contains various functions and logic to perform arithmetic operations, handle user input, and update the user interface
 
 ## 4. How to run the app
