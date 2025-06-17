@@ -30,7 +30,7 @@ This project is a simple calculator application that performs basic arithmetic o
 *switch.css* - contains darkmode/lightmode switch styles  
 
 *  **js/**
-> The **js/** folder is dedicated to managing the styles and visual aspects of the application.
+> The **js/** folder is dedicated to events handlers and core application logic.
 
 *index.js* - contains the basic logic for handling user events  
 *calculator.js* - contains various functions and logic to perform arithmetic operations, handle user input, and update the user interface
