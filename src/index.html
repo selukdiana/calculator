@@ -6,10 +6,14 @@
     <title>Calculator</title>
   </head>
   <body>
-    <div id="root">
+    <section id="main">
+      <label class="switch">
+        <input type="checkbox" class="switch__input" />
+        <span class="switch__slider"></span>
+      </label>
       <div class="calculator">
-        <p class="display">0</p>
-        <div class="keypad">
+        <p class="calculator__display">0</p>
+        <div class="calculator__keypad">
           <button
             data-type="operator"
             data-operator="all-clear"
@@ -60,7 +64,7 @@
           <button data-type="operator" data-operator="plus" class="btn-accent">
             &plus;
           </button>
-          <button data-type="digit" class="zero">0</button>
+          <button data-type="digit" class="btn-zero">0</button>
           <button data-type="operator" data-operator="dec-point">&sdot;</button>
           <button
             data-type="operator"
@@ -71,6 +75,6 @@
           </button>
         </div>
       </div>
-    </div>
+    </section>
   </body>
 </html>

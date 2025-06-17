@@ -1,12 +1,10 @@
-const display = document.querySelector('.display');
+const display = document.querySelector('.calculator__display');
 let input = [];
 
 const updateDisplay = () => {
-  display.innerHTML =
-    input.length === 0
-      ? '0'
-      : input.map((elem) => elem.value).join(' ');
-}
+  display.innerText =
+    input.length === 0 ? '0' : input.map((elem) => elem.value).join(' ');
+};
 
 export const insertNumber = (value) => {
   if (input.length === 0) {
@@ -18,7 +16,9 @@ export const insertNumber = (value) => {
     const lastElemIndex = input.length - 1;
     const elemType = input[lastElemIndex].type;
     if (elemType === 'digit') {
-      if (input[lastElemIndex].value.includes('%')) { return }
+      if (input[lastElemIndex].value.includes('%')) {
+        return;
+      }
       if (input[lastElemIndex].value === '0') {
         input[lastElemIndex].value = value;
       } else {
@@ -32,7 +32,7 @@ export const insertNumber = (value) => {
     }
   }
   updateDisplay();
-}
+};
 
 export const insertOperator = (value) => {
   if (!input.length) return;
@@ -45,12 +45,12 @@ export const insertOperator = (value) => {
   }
 
   updateDisplay();
-}
+};
 
 export const clearAll = () => {
   input = [];
   updateDisplay();
-}
+};
 
 export const negateNumber = () => {
   if (!input.length) return;
@@ -58,36 +58,37 @@ export const negateNumber = () => {
   const elemType = input[lastElemIndex].type;
   if (elemType === 'digit') {
     input[lastElemIndex].value *= -1;
-    input[lastElemIndex].value = input[lastElemIndex].value.toString()
+    input[lastElemIndex].value = input[lastElemIndex].value.toString();
     updateDisplay();
   }
-
-}
+};
 const changePercentToDecimal = (value) => {
-  return value / 100
-}
+  return value / 100;
+};
 
 export const insertPercent = () => {
   if (!input.length) {
     input.push({
       type: 'digit',
-      value: '0%'
-    })
+      value: '0%',
+    });
   } else {
     const lastElemIndex = input.length - 1;
     const elemType = input[lastElemIndex].type;
     if (elemType === 'digit') {
       const lastSymbol = input[lastElemIndex].value.slice(-1);
       if (lastSymbol === '%' || lastSymbol === '.') {
-        input[lastElemIndex].value = input[lastElemIndex].value.slice(0, -1) + '%'
+        input[lastElemIndex].value =
+          input[lastElemIndex].value.slice(0, -1) + '%';
       } else {
         input[lastElemIndex].value += '%';
       }
-
-    } else { return }
+    } else {
+      return;
+    }
   }
   updateDisplay();
-}
+};
 
 export const insertDecimalPoint = () => {
   if (input.length === 0) {
@@ -110,35 +111,37 @@ export const insertDecimalPoint = () => {
     }
   }
   updateDisplay();
-}
+};
 
 const performOperation = (leftOperand, operator, rightOperand) => {
-  const isLeftOperandIncludesPercent = leftOperand.includes('%')
-  const isRightOperandIncludesPercent = rightOperand.includes('%')
+  const isLeftOperandIncludesPercent = leftOperand.includes('%');
+  const isRightOperandIncludesPercent = rightOperand.includes('%');
 
-  if (!isLeftOperandIncludesPercent && isRightOperandIncludesPercent && (operator === '−' || operator === '+')) {
-    rightOperand = rightOperand.slice(0, -1)
+  if (
+    !isLeftOperandIncludesPercent &&
+    isRightOperandIncludesPercent &&
+    (operator === '−' || operator === '+')
+  ) {
+    rightOperand = rightOperand.slice(0, -1);
     rightOperand = parseFloat(rightOperand);
     leftOperand = parseFloat(leftOperand);
-    rightOperand = leftOperand * changePercentToDecimal(rightOperand)
-
+    rightOperand = leftOperand * changePercentToDecimal(rightOperand);
   } else {
     if (isLeftOperandIncludesPercent) {
-      leftOperand = leftOperand.slice(0, -1)
+      leftOperand = leftOperand.slice(0, -1);
       leftOperand = parseFloat(leftOperand);
-      leftOperand = changePercentToDecimal(leftOperand)
+      leftOperand = changePercentToDecimal(leftOperand);
     } else {
-      leftOperand = parseFloat(leftOperand)
+      leftOperand = parseFloat(leftOperand);
     }
 
     if (isRightOperandIncludesPercent) {
-      rightOperand = rightOperand.slice(0, -1)
+      rightOperand = rightOperand.slice(0, -1);
       rightOperand = parseFloat(rightOperand);
-      rightOperand = changePercentToDecimal(rightOperand)
+      rightOperand = changePercentToDecimal(rightOperand);
     } else {
       rightOperand = parseFloat(rightOperand);
     }
-
   }
 
   switch (operator) {
@@ -158,7 +161,7 @@ const performOperation = (leftOperand, operator, rightOperand) => {
       return;
     }
   }
-}
+};
 
 const simplifyExpression = (currentExpression, operator) => {
   const operatorIndex = currentExpression.findIndex((elem) => {
@@ -171,17 +174,10 @@ const simplifyExpression = (currentExpression, operator) => {
     const rightOperatorIndex = operatorIndex + 1;
 
     const partialSolution = performOperation(
-      ...currentExpression.slice(
-        leftOperandIndex,
-        rightOperatorIndex + 1,
-      ),
+      ...currentExpression.slice(leftOperandIndex, rightOperatorIndex + 1),
     );
 
-    currentExpression.splice(
-      leftOperandIndex,
-      3,
-      partialSolution.toString(),
-    );
+    currentExpression.splice(leftOperandIndex, 3, partialSolution.toString());
     return simplifyExpression(currentExpression, operator);
   }
 };
@@ -192,12 +188,14 @@ export const generateResult = () => {
   if (input.length === 1) {
     if (input[0].value.includes('%')) {
       let value = input[0].value.slice(0, -1);
-      value = changePercentToDecimal(value).toString()
-      input = [{
-        type: 'digit',
-        value
-      }]
-      updateDisplay()
+      value = changePercentToDecimal(value).toString();
+      input = [
+        {
+          type: 'digit',
+          value,
+        },
+      ];
+      updateDisplay();
     }
     return;
   }
@@ -212,5 +210,4 @@ export const generateResult = () => {
     input = [{ type: 'digit', value: result[0] }];
     updateDisplay();
   }
-}
-
+};

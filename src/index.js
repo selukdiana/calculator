@@ -1,14 +1,23 @@
-import { insertNumber, clearAll, negateNumber, insertPercent, insertDecimalPoint, generateResult, insertOperator } from './js/calculator';
+import {
+  insertNumber,
+  clearAll,
+  negateNumber,
+  insertPercent,
+  insertDecimalPoint,
+  generateResult,
+  insertOperator,
+} from './js/calculator';
 import './css/styles.css';
 
-const keypad = document.querySelector('.keypad');
+const keypad = document.querySelector('.calculator__keypad');
 
 keypad.addEventListener('click', (e) => {
   const btn = e.target.closest('button');
+  if (!btn) return;
   const type = btn.dataset.type;
 
   if (type === 'digit') {
-    insertNumber(btn.innerHTML);
+    insertNumber(btn.innerText);
   } else if (type === 'operator') {
     const operator = btn.dataset.operator;
     const value = btn.innerText;
@@ -39,4 +48,10 @@ keypad.addEventListener('click', (e) => {
       }
     }
   }
+});
+
+const modeSwitch = document.querySelector('.switch__input');
+
+modeSwitch.addEventListener('change', () => {
+  document.body.classList.toggle('darkstyle');
 });
