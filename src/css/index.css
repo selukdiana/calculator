@@ -5,6 +5,7 @@
   --color-secondary: rgb(199, 199, 199);
   --color-calculator: rgb(235, 235, 235);
   --color-accent: orange;
+  --color-shadow: rgba(0, 0, 0, 0.35);
 }
 
 .darkstyle {
@@ -13,6 +14,7 @@
   --color-primary: rgb(70, 70, 70);
   --color-secondary: rgb(119, 119, 119);
   --color-calculator: rgb(44, 44, 44);
+  --color-shadow: rgba(255, 255, 255, 0.35);
 }
 
 * {
