@@ -21,11 +21,6 @@ const replaceLastElementValue = (value) => {
 
 const changePercentToDecimal = (value) => value / 100;
 
-const processPercentOperand = (operand) => {
-  operand = operand.slice(0, -1);
-  return changePercentToDecimal(operand)
-}
-
 export const insertNumber = (value) => {
   if (!input.length || getLastElement().type === 'operator') {
     addElement('digit', value);
@@ -64,8 +59,8 @@ export const negateNumber = () => {
   if (lastElem.type === 'digit') {
     let value = lastElem.value;
     const isPercent = value.includes('%');
-    value = isPercent ? value.slice(0, -1) : value;
-    lastElem.value = (parseFloat(value) * -1).toString() + (isPercent ? '%' : '');
+    value = parseFloat(value);
+    lastElem.value = (value * -1).toString() + (isPercent ? '%' : '');
     updateDisplay();
   }
 };
@@ -104,24 +99,18 @@ const performOperation = (leftOperand, operator, rightOperand) => {
   const isLeftOperandIncludesPercent = leftOperand.includes('%');
   const isRightOperandIncludesPercent = rightOperand.includes('%');
 
-  if (
-    !isLeftOperandIncludesPercent &&
-    isRightOperandIncludesPercent &&
-    (operator === '−' || operator === '+')
-  ) {
-    rightOperand = leftOperand * processPercentOperand(rightOperand)
-  } else {
-    if (isLeftOperandIncludesPercent) {
-      leftOperand = processPercentOperand(leftOperand)
-    }
-
-    if (isRightOperandIncludesPercent) {
-      rightOperand = processPercentOperand(rightOperand);
-    }
-  }
-
   leftOperand = parseFloat(leftOperand);
   rightOperand = parseFloat(rightOperand);
+
+  if (isLeftOperandIncludesPercent) {
+    leftOperand = changePercentToDecimal(leftOperand);
+  }
+
+  if (isRightOperandIncludesPercent) {
+    rightOperand = !isLeftOperandIncludesPercent && (operator === '−' || operator === '+')
+      ? leftOperand * changePercentToDecimal(rightOperand)
+      : changePercentToDecimal(rightOperand);
+  }
 
   switch (operator) {
     case '×': {
@@ -169,7 +158,7 @@ export const generateResult = () => {
 
   if (input.length === 1) {
     const value = input[0].value.includes('%')
-      ? processPercentOperand(input[0].value).toString()
+      ? changePercentToDecimal(parseFloat(input[0].value)).toString()
       : input[0].value;
 
     input = [{ type: 'digit', value }];
