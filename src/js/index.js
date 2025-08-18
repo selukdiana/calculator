@@ -1,164 +1,186 @@
+import { Calculator } from './Calculator';
+import {
+  SetCommand,
+  FuncCommand,
+  BinaryCommand,
+  MemoryCommand,
+  PercentCommand,
+} from './Command';
 import '../css/index.css';
 import '../css/switch.css';
 import '../css/calculator.css';
-import { Calculator } from './Calculator.js';
-import {
-  ClearAllCommand,
-  GenerateResultCommand,
-  insertDecimalPointCommand,
-  InsertNumberCommand,
-  InsertOperatorCommand,
-  insertPercentCommand,
-  negateNumberCommand,
-} from './Command.js';
 
-const calculator = new Calculator(
-  document.querySelector('.calculator__display'),
-);
+// -------------- Client + Invoker --------------
 
-const executeCommand = (command) => {
-  command.execute();
+// ----------------------
+// Client + Invoker
+// ----------------------
+
+const calc = new Calculator();
+const display = document.getElementById('display');
+
+let currentInput = calc.leftOperand;
+const saveSnapshot = () => {
+  calc.history.push({
+    currentInput,
+    memory: calc.memory,
+    leftOperand: calc.leftOperand,
+    rightOperand: calc.rightOperand,
+    operator: calc.operator,
+    pendingCmd: calc.pendingCmd,
+  });
 };
 
-const getCommand = (btn) => {
-  const type = btn.dataset.type;
-  switch (type) {
-    case 'digit': {
-      return new InsertNumberCommand(calculator, btn.innerText);
-    }
-    case 'all-clear': {
-      return new ClearAllCommand(calculator);
-    }
-    case 'negation': {
-      return new negateNumberCommand(calculator);
-    }
-    case 'percent': {
-      return new insertPercentCommand(calculator);
-    }
-    case 'dec-point': {
-      return new insertDecimalPointCommand(calculator);
-    }
-    case 'equals': {
-      return new GenerateResultCommand(calculator);
-    }
-    case 'plus': {
-      return new InsertOperatorCommand(calculator, '+');
-    }
-    case 'minus': {
-      return new InsertOperatorCommand(calculator, '−');
-    }
-    case 'multiply': {
-      return new InsertOperatorCommand(calculator, '×');
-    }
-    case 'divide': {
-      return new InsertOperatorCommand(calculator, '÷');
-    }
-    case 'left-parenthesis': {
-      return null;
-    }
-    case 'right-parenthesis': {
-      return null;
-    }
-    case 'memory-clear': {
-      return null;
-    }
-    case 'memory-plus': {
-      return null;
-    }
-    case 'memory-minus': {
-      return null;
-    }
-    case 'memory-recall': {
-      return null;
-    }
-    case '2nd': {
-      return null;
-    }
-    case 'pow-of-2': {
-      return null;
-    }
-    case 'pow-of-3': {
-      return null;
-    }
-    case 'x-to-pow-of-y': {
-      return null;
-    }
-    case 'e-to-pow-of-x': {
-      return null;
-    }
-    case '10-to-pow-of-x': {
-      return null;
-    }
-    case 'reciprocal': {
-      return null;
-    }
-    case 'square-roo': {
-      return null;
-    }
-    case 'cube-root3': {
-      return null;
-    }
-    case 'y-rooty': {
-      return null;
-    }
-    case 'ln': {
-      return null;
-    }
-    case 'log10': {
-      return null;
-    }
-    case 'factorial': {
-      return null;
-    }
-    case 'sin': {
-      return null;
-    }
-    case 'cos': {
-      return null;
-    }
-    case 'tan': {
-      return null;
-    }
-    case 'e': {
-      return null;
-    }
-    case 'EE': {
-      return null;
-    }
-    case 'rad': {
-      return null;
-    }
-    case 'sinh': {
-      return null;
-    }
-    case 'cosh': {
-      return null;
-    }
-    case 'tanh': {
-      return null;
-    }
-    case 'pi': {
-      return null;
-    }
-    case 'rand': {
-      return null;
-    }
-    default: {
-      return null;
-    }
+const undo = () => {
+  if (!calc.history.length) return;
+  const prevState = calc.history.pop();
+  calc.leftOperand = prevState.leftOperand;
+  calc.rightOperand = prevState.rightOperand;
+  calc.operator = prevState.operator;
+  currentInput = prevState.currentInput;
+  calc.pendingCmd = prevState.pendingCmd;
+  calc.memory = prevState.memory;
+};
+
+const opSymbols = {
+  add: '+',
+  subtract: '−',
+  multiply: '×',
+  divide: '÷',
+  power: '^',
+  EE: 'EE',
+  yRoot: 'root',
+};
+
+// Обёртка: выполнить команду и сохранить её в истории
+const run = (cmd) => {
+  try {
+    cmd.execute();
+    render();
+    return true;
+  } catch (e) {
+    display.innerHTML = e.message;
+    currentInput = '';
+    calc.clear();
+    return;
   }
 };
 
-const keypad = document.querySelector('.calculator__keypad');
-keypad.addEventListener('click', (e) => {
-  const btn = e.target.closest('button');
-  if (!btn) return;
-  const command = getCommand(btn);
-  executeCommand(command);
+// Рендер дисплея
+function render() {
+  display.innerHTML = calc.error
+    ? calc.error
+    : `${calc.leftOperand} ${calc.operator === null ? '' : opSymbols[calc.operator]} ${calc.rightOperand === null ? '' : calc.rightOperand}`;
+}
+
+// Сброс всех состояний
+function clearAll() {
+  calc.clear();
+  currentInput = '0';
+  render();
+}
+
+// Ввод цифр и точки
+document.querySelectorAll('.number').forEach((btn) =>
+  btn.addEventListener('click', () => {
+    saveSnapshot();
+    if (btn.textContent === '.') {
+      if (currentInput.includes('.')) return;
+      currentInput = currentInput ? currentInput + '.' : '0.';
+    } else {
+      currentInput =
+        currentInput === '0' ? btn.textContent : currentInput + btn.textContent;
+    }
+    // Выполняем и сохраняем ввод как команду
+    const cmd = new SetCommand(calc, currentInput);
+
+    run(cmd);
+    // render();
+  }),
+);
+
+// Бинарные операторы
+document.querySelectorAll('.operator').forEach((btn) =>
+  btn.addEventListener('click', () => {
+    saveSnapshot();
+    const op = btn.dataset.type;
+
+    if (calc.pendingCmd && calc.rightOperand) {
+      if (!run(calc.pendingCmd)) return;
+    }
+    calc.pendingCmd = new BinaryCommand(calc, op);
+    calc.operator = op;
+    currentInput = '';
+    render();
+  }),
+);
+
+// «=»
+document.getElementById('btn-equals').addEventListener('click', () => {
+  if (!calc.pendingCmd || !calc.rightOperand) return;
+  saveSnapshot();
+  if (!run(calc.pendingCmd)) return;
+  currentInput = calc.leftOperand.toString();
+  // render();
 });
 
-const modeSwitch = document.querySelector('.switch__input');
+// Унарные функции, константы, % и ±
+document.querySelectorAll('.func').forEach((btn) =>
+  btn.addEventListener('click', () => {
+    saveSnapshot();
+    const fn = btn.dataset.type;
+    const cmd =
+      fn === 'percent' ? new PercentCommand(calc) : new FuncCommand(calc, fn);
 
-modeSwitch.addEventListener('change', () => {
-  document.body.classList.toggle('darkstyle');
+    if (!run(cmd)) return;
+    currentInput = '';
+    // render();
+  }),
+);
+
+// Память
+document.querySelectorAll('.memory').forEach((btn) =>
+  btn.addEventListener('click', () => {
+    const m = btn.dataset.type;
+    const map = {
+      mc: 'memoryClear',
+      mr: 'memoryRecall',
+      'm+': 'memoryAdd',
+      'm-': 'memorySubtract',
+    };
+    let opnd = null;
+    if (m === 'm+' || m === 'm-') {
+      opnd = currentInput
+        ? parseFloat(currentInput)
+        : calc.rightOperand
+          ? parseFloat(calc.rightOperand)
+          : parseFloat(calc.leftOperand);
+    }
+    if (!run(new MemoryCommand(calc, map[m], opnd))) return;
+
+    if (m === 'mr') {
+      // render();
+      currentInput = calc.leftOperand;
+    }
+  }),
+);
+
+// Undo
+document.getElementById('btn-undo').addEventListener('click', () => {
+  undo();
+  render();
 });
+// Clear
+document.getElementById('btn-clear').addEventListener('click', clearAll);
+
+const radDegSwitch = document.getElementById('radDegSwitch');
+radDegSwitch.addEventListener('click', () => {
+  if (radDegSwitch.textContent === 'Rad') {
+    radDegSwitch.textContent = 'Deg';
+  } else {
+    radDegSwitch.textContent = 'Rad';
+  }
+  calc.isDegrees = !calc.isDegrees;
+});
+// Инициалный рендер
+render(true);
