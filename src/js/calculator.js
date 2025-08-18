@@ -1,157 +1,138 @@
+import { random, PI, E, log, sin, cos, tan, sinh, cosh, tanh } from './math';
 export class Calculator {
-  constructor(display) {
-    this.display = display;
-    this.input = [];
-    this.memory = [];
+  constructor() {
+    this.memory = 0;
+    this.history = [];
+    this.leftOperand = '0';
+    this.rightOperand = null;
+    this.operator = null;
+    this.pendingCmd = null;
+    this.isDegrees = false;
   }
 
-  updateDisplay() {
-    ;
-    this.display.innerText = this.input.length
-      ? this.input.map((elem) => elem.value).join(' ')
-      : '0';
-  }
-
-  getLastElement() {
-    return this.input[this.input.length - 1];
-  }
-
-  addElement(type, value) {
-    this.input.push({ type, value });
-  }
-
-  replaceLastElementValue(value) {
-    if (this.input.length) {
-      this.getLastElement().value = value;
-    }
-  }
-
-  changePercentToDecimal(value) {
-    return value / 100;
-  }
-
-  insertNumber(value) {
-    ;
-    if (!this.input.length || this.getLastElement().type === 'operator') {
-      this.addElement('digit', value);
+  set(x) {
+    if (this.operator) {
+      this.rightOperand = x;
     } else {
-      const lastElem = this.getLastElement();
-      if (lastElem.value === '0') {
-        lastElem.value = value;
-      } else if (isFinite(lastElem.value)) {
-        lastElem.value += value;
-      }
-    }
-    this.updateDisplay();
-  }
-
-  undoInsertNumber() {}
-  insertOperator(value) {
-    ;
-    if (!this.input.length) return;
-    if (this.input.some((elem) => elem.type === 'operator'))
-      this.generateResult();
-    const lastElem = this.getLastElement();
-    if (lastElem.type === 'operator') {
-      this.replaceLastElementValue(value);
-    } else if (lastElem.type === 'digit') {
-      this.addElement('operator', value);
-    }
-    this.updateDisplay();
-  }
-
-  undoInsertOperator() {}
-  negateNumber() {
-    if (!this.input.length) return;
-
-    const lastElem = this.getLastElement();
-    if (lastElem.type === 'digit') {
-      let value = lastElem.value;
-      const isPercent = value.includes('%');
-      value = parseFloat(value);
-      lastElem.value = (value * -1).toString() + (isPercent ? '%' : '');
-      this.updateDisplay();
+      this.leftOperand = x;
     }
   }
-
-  insertPercent = () => {
-    if (!this.input.length) {
-      this.addElement('digit', '0%');
-    } else {
-      const lastElem = this.getLastElement();
-      const lastSymbol = lastElem.value.slice(-1);
-      if (lastElem.type === 'digit') {
-        lastElem.value =
-          lastSymbol === '%' || lastSymbol === '.'
-            ? lastElem.value.slice(0, -1) + '%'
-            : lastElem.value + '%';
-      }
-    }
-    this.updateDisplay();
-  };
-
-  insertDecimalPoint = () => {
-    if (!this.input.length) {
-      this.addElement('digit', '0.');
-    } else {
-      const lastElem = this.getLastElement();
-      if (
-        lastElem.type === 'digit' &&
-        !lastElem.value.includes('.') &&
-        !lastElem.value.includes('%')
-      ) {
-        lastElem.value += '.';
-      } else if (lastElem.type === 'operator') {
-        this.addElement('digit', '0.');
-      }
-    }
-    this.updateDisplay();
-  };
-  clearAll() {
-    ;
-    this.input = [];
-    this.updateDisplay();
+  clear() {
+    this.leftOperand = 0;
+    this.operator = null;
+    this.rightOperand = null;
+    this.pendingCmd = null;
+    this.memory = 0;
+    this.history.length = 0;
+  }
+  add() {
+    return parseFloat(this.leftOperand) + parseFloat(this.rightOperand);
+  }
+  subtract() {
+    return parseFloat(this.leftOperand) - parseFloat(this.rightOperand);
+  }
+  multiply() {
+    return parseFloat(this.leftOperand) * parseFloat(this.rightOperand);
+  }
+  divide() {
+    return parseFloat(this.leftOperand) / parseFloat(this.rightOperand);
+  }
+  power() {
+    return parseFloat(this.leftOperand) ** parseFloat(this.rightOperand);
+  }
+  yRoot() {
+    return parseFloat(this.leftOperand) ** (1 / parseFloat(this.rightOperand));
+  }
+  EE() {
+    return this.leftOperand * 10 ** parseFloat(this.rightOperand);
+  }
+  square(x) {
+    return x ** 2;
+  }
+  cube(x) {
+    return x ** 3;
+  }
+  ePowerX(x) {
+    return E ** x;
+  }
+  tenPowerX(x) {
+    return 10 ** x;
+  }
+  reciprocal(x) {
+    return 1 / x;
+  }
+  squareRoot(x) {
+    return x ** (1 / 2);
+  }
+  cubeRoot(x) {
+    return x ** (1 / 3);
+  }
+  ln(x) {
+    return log(E, x);
   }
 
-  calculate(leftOperand, operator, rightOperand) {
-    switch (operator) {
-      case '×': {
-        return leftOperand * rightOperand;
-      }
-      case '÷': {
-        return leftOperand / rightOperand;
-      }
-      case '−': {
-        return leftOperand - rightOperand;
-      }
-      case '+': {
-        return leftOperand + rightOperand;
-      }
-    }
+  log10(x) {
+    return log(10, x);
   }
-  generateResult() {
-    ;
-    if (this.input.length < 3) return;
-    let [leftOperand, operator, rightOperand] = this.input;
-    const isLeftOperandIncludesPercent = leftOperand.value.includes('%');
-    const isRightOperandIncludesPercent = rightOperand.value.includes('%');
+  factorial(x) {
+    let n = parseInt(x),
+      res = 1;
+    if (n < 0) throw new Error('Ошибка ввода');
+    for (let i = 1; i <= n; i++) res *= i;
+    return res;
+  }
+  sin(x) {
+    return sin(x, this.isDegrees);
+  }
+  cos(x) {
+    return cos(x, this.isDegrees);
+  }
+  tan(x) {
+    return tan(x, this.isDegrees);
+  }
+  sinh(x) {
+    return sinh(x);
+  }
+  cosh(x) {
+    return cosh(x);
+  }
+  tanh(x) {
+    return tanh(x);
+  }
 
-    leftOperand = parseFloat(leftOperand.value);
-    rightOperand = parseFloat(rightOperand.value);
-    operator = operator.value;
+  percent(x) {
+    return x / 100;
+  }
+  changeSign(x) {
+    return x * -1;
+  }
 
-    if (isLeftOperandIncludesPercent) {
-      leftOperand = this.changePercentToDecimal(leftOperand);
-    }
+  e(x) {
+    return E;
+  }
 
-    if (isRightOperandIncludesPercent) {
-      rightOperand =
-        !isLeftOperandIncludesPercent && (operator === '−' || operator === '+')
-          ? leftOperand * this.changePercentToDecimal(rightOperand)
-          : this.changePercentToDecimal(rightOperand);
-    }
-    const result = this.calculate(leftOperand, operator, rightOperand);
-    this.input = [{ type: 'digit', value: result.toString() }];
-    this.updateDisplay();
+  pi(x) {
+    return PI;
+  }
+
+  rand(x) {
+    return random();
+  }
+
+  // Memory
+  memoryClear() {
+    this.memory = 0;
+  }
+  memoryAdd(x) {
+    this.memory += x;
+  }
+  memorySubtract(x) {
+    this.memory -= x;
+  }
+  memoryRecall() {
+    this.leftOperand = this.memory;
+    this.rightOperand = null;
+    this.operator = null;
+    this.pendingCmd = null;
   }
 }
