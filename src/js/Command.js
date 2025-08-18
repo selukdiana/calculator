@@ -1,90 +1,110 @@
+// ---------------- Command ----------------
 class Command {
-  execute() {}
-  undo() {}
+  execute() {
+    throw 'execute() must be implemented';
+  }
 }
 
-export class InsertNumberCommand extends Command {
-  constructor(calculator, value) {
+export class SetCommand extends Command {
+  constructor(calc, operand) {
     super();
-    this.calculator = calculator;
-    this.value = value;
+    this.calc = calc;
+    this.operand = operand;
   }
-
   execute() {
-    this.calculator.insertNumber(this.value);
+    this.calc.set(this.operand);
   }
-  undo() {}
 }
 
-export class InsertOperatorCommand extends Command {
-  constructor(calculator, value) {
+export class BinaryCommand extends Command {
+  constructor(calc, op) {
     super();
-    this.calculator = calculator;
-    this.value = value;
+    this.calc = calc;
+    this.op = op;
   }
-
   execute() {
-    this.calculator.insertOperator(this.value);
+    const res = this.calc[this.op]();
+    if (res === Infinity) throw new Error('Переполнение');
+    this.calc.leftOperand = res;
+    this.calc.operator = null;
+    this.calc.rightOperand = null;
+    this.calc.pendingCmd = null;
   }
-  undo() {}
 }
 
-export class ClearAllCommand extends Command {
-  constructor(calculator) {
+export class FuncCommand extends Command {
+  constructor(calc, funcName) {
     super();
-    this.calculator = calculator;
+    this.calc = calc;
+    this.fn = funcName;
   }
-
   execute() {
-    this.calculator.clearAll();
+    if (this.calc.rightOperand !== null) {
+      const res = this.calc[this.fn](parseFloat(this.calc.rightOperand));
+      if (res === Infinity) throw new Error('Переполнение');
+      this.calc.rightOperand = res;
+    } else if (this.calc.leftOperand !== null) {
+      const res = this.calc[this.fn](parseFloat(this.calc.leftOperand));
+      if (res === Infinity) throw new Error('Переполнение');
+      this.calc.leftOperand = res;
+    }
   }
-  undo() {}
 }
 
-export class GenerateResultCommand extends Command {
-  constructor(calculator) {
+export class PercentCommand extends Command {
+  constructor(calc) {
     super();
-    this.calculator = calculator;
+    this.calc = calc;
   }
-
   execute() {
-    this.calculator.generateResult();
+    if (this.calc.rightOperand) {
+      const op = this.calc.operator;
+      switch (op) {
+        case 'add': {
+          this.calc.rightOperand =
+            this.calc.leftOperand *
+            this.calc['percent'](parseFloat(this.calc.rightOperand));
+          break;
+        }
+        case 'substract': {
+          this.calc.rightOperand =
+            this.calc.leftOperand *
+            this.calc['percent'](parseFloat(this.calc.rightOperand));
+          break;
+        }
+
+        case 'multiply': {
+          this.calc.leftOperand =
+            this.calc.leftOperand *
+            this.calc['percent'](parseFloat(this.calc.rightOperand));
+
+          this.calc.rightOperand = null;
+          this.calc.operator = null;
+          this.calc.pendingCmd = null;
+          break;
+        }
+        default: {
+          this.calc.rightOperand = this.calc['percent'](
+            parseFloat(this.calc.rightOperand),
+          );
+        }
+      }
+    } else {
+      this.calc.leftOperand = this.calc['percent'](
+        parseFloat(this.calc.leftOperand),
+      );
+    }
   }
-  undo() {}
 }
 
-export class negateNumberCommand extends Command {
-  constructor(calculator) {
+export class MemoryCommand extends Command {
+  constructor(calc, op, operand) {
     super();
-    this.calculator = calculator;
+    this.calc = calc;
+    this.op = op;
+    this.operand = operand;
   }
-
   execute() {
-    this.calculator.negateNumber();
+    this.calc[this.op](parseFloat(this.operand));
   }
-  undo() {}
-}
-
-export class insertPercentCommand extends Command {
-  constructor(calculator) {
-    super();
-    this.calculator = calculator;
-  }
-
-  execute() {
-    this.calculator.insertPercent();
-  }
-  undo() {}
-}
-
-export class insertDecimalPointCommand extends Command {
-  constructor(calculator) {
-    super();
-    this.calculator = calculator;
-  }
-
-  execute() {
-    this.calculator.insertDecimalPoint();
-  }
-  undo() {}
 }
