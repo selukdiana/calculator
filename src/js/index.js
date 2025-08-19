@@ -155,6 +155,7 @@ document.querySelectorAll('.memory').forEach((btn) =>
         : calc.rightOperand
           ? parseFloat(calc.rightOperand)
           : parseFloat(calc.leftOperand);
+      currentInput = '';
     }
     if (!run(new MemoryCommand(calc, map[m], opnd))) return;
 

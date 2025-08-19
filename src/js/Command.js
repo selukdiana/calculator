@@ -24,7 +24,7 @@ export class BinaryCommand extends Command {
   }
   execute() {
     const res = this.calc[this.op]();
-    if (res === Infinity) throw new Error('Переполнение');
+    if (res === Infinity || res === -Infinity) throw new Error('Переполнение');
     this.calc.leftOperand = res;
     this.calc.operator = null;
     this.calc.rightOperand = null;
@@ -41,11 +41,13 @@ export class FuncCommand extends Command {
   execute() {
     if (this.calc.rightOperand !== null) {
       const res = this.calc[this.fn](parseFloat(this.calc.rightOperand));
-      if (res === Infinity) throw new Error('Переполнение');
+      if (res === Infinity || res === -Infinity)
+        throw new Error('Переполнение');
       this.calc.rightOperand = res;
     } else if (this.calc.leftOperand !== null) {
       const res = this.calc[this.fn](parseFloat(this.calc.leftOperand));
-      if (res === Infinity) throw new Error('Переполнение');
+      if (res === Infinity || res === -Infinity)
+        throw new Error('Переполнение');
       this.calc.leftOperand = res;
     }
   }
