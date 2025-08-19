@@ -2,41 +2,57 @@
 
 ## 1. Task
 
-[Innowise Lab Internship* Level 0* Simple calculator.pdf](https://github.com/user-attachments/files/20774184/Innowise.Lab.Internship_.Level.0_.Simple.calculator.pdf)
+[Innowise Lab Internship_ Level 0_ Custom calculator.pdf](https://github.com/user-attachments/files/21856136/Innowise.Lab.Internship_.Level.0_.Custom.calculator.1.1.pdf)
+
 
 ## 2. Description
 
-This project is a simple calculator application that performs basic arithmetic operations such as addition, subtraction, multiplication, division, negation and percentage. For more details, please refer to the task document.
+This project implements a Scientific Calculator that goes beyond basic arithmetic to include advanced mathematical functions and constants:
+
+### Arithmetic & Power
+* Addition, subtraction, multiplication, division
+* Exponentiation (tenPowerX, EE)
+* Arbitrary-degree roots (yRoot), square root, cube root
+
+### Logarithms & Constants
+* Natural logarithm (ln)
+* Base-10 logarithm (log10)
+* Mathematical constants: e (e()), π (pi())
+
+### Utility Functions
+* Reciprocal (reciprocal)
+* Percent conversion (percent)
+* Sign inversion (changeSign)
+* Random number generator (rand)
+
+For more details, please refer to the task document.
 
 ## 3. Project structure
 
 ```
-/calculator
-  └── /src
-    └── /css
-      ├── calculator.css
-      ├── index.css
-      └── switch.css
-    └── /js
-      ├── calculator.js
-      └── index.js
-    └── index.html
+/ (root)
+├─ src/
+│  ├─ css/
+│  │  ├─ calculator.css
+│  │  ├─ index.css
+│  │  └─ switch.css
+│  ├─ js/
+│  │  ├─ Calculator.js       # Core calculator logic
+│  │  ├─ Command.js          # Command pattern handlers
+│  │  ├─ index.js            # App entry point, UI bindings
+│  │  └─ math.js             # Math utility functions
+│  ├─ tests/
+│  │  └─ Calculator.test.js  # Jest tests for calculator logic
+│  └─ index.html             # Main HTML file
+├─ .babelrc                  # Babel configuration
+├─ .gitignore                # Git ignore rules
+├─ .prettierignore           # Prettier ignore rules
+├─ .prettierrc               # Prettier configuration
+├─ eslint.config.mjs         # ESLint configuration
+├─ package.json              # Project metadata & dependencies
+├─ package-lock.json         # Locked dependency versions
+└─ webpack.config.js         # Webpack bundling configuration
 ```
-
-> Folders Description
-
-- **css/**
-  > The **css/** folder is dedicated to managing the styles and visual aspects of the application.
-
-_index.css_ - contains the global styles for the entire application  
-_calculator.css_ - contains calculator styles  
-_switch.css_ - contains darkmode/lightmode switch styles
-
-- **js/**
-  > The **js/** folder is dedicated to events handlers and core application logic.
-
-_index.js_ - contains the basic logic for handling user events  
-_calculator.js_ - contains various functions and logic to perform arithmetic operations, handle user input, and update the user interface
 
 ## 4. How to run the app
 
@@ -66,3 +82,13 @@ To start the application, use:
 ```
 
 The app will be accessible at http://localhost:5000.
+
+Available Scripts
+
+```
+npm start — start dev server
+npm test — run Jest tests
+npm run lint — run ESLint
+npm run format — run Prettier
+npm run build — bundle for production
+```
