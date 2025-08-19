@@ -107,15 +107,15 @@ export class Calculator {
     return x * -1;
   }
 
-  e(x) {
+  e() {
     return E;
   }
 
-  pi(x) {
+  pi() {
     return PI;
   }
 
-  rand(x) {
+  rand() {
     return random();
   }
 
