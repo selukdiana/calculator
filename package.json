@@ -11,19 +11,35 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
     "check-format": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "jest"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "testEnvironmentOptions": {
+      "url": "http://localhost/"
+    },
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@babel/core": "^7.28.3",
+    "@babel/preset-env": "^7.28.3",
     "@eslint/js": "^9.29.0",
+    "babel-jest": "^30.0.5",
     "css-loader": "^7.1.2",
     "eslint": "^9.29.0",
     "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-jest": "^29.0.1",
     "globals": "^16.2.0",
     "html-webpack-plugin": "^5.6.3",
     "husky": "^9.1.7",
+    "jest": "^26.6.3",
+    "jest-environment-jsdom": "^30.0.5",
     "prettier": "3.5.3",
     "style-loader": "^4.0.0",
     "webpack": "^5.99.9",
