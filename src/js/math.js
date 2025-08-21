@@ -44,7 +44,7 @@ export function log(base, num) {
 
 // Сводим угол в [-π, +π] для лучшей сходимости рядов
 function normalizeAngle(x) {
-  // трюк: возьмём остаток от деления на 2π
+  //возьмём остаток от деления на 2π
   const k = (x / TWO_PI) | 0; // усечение до целой части (влево/вправо сдвигом)
   let r = x - k * TWO_PI;
   // приводим в [-π, π]
@@ -57,12 +57,12 @@ function normalizeResult(x) {
   return parseFloat(x.toFixed(5));
 }
 
-// Утилита: конвертировать градусы в радианы
+// Конвертировать градусы в радианы
 function toRadians(degrees) {
   return degrees * DEG_TO_RAD;
 }
 
-// 2. Экспонента e^x через ряд Тейлора
+// Экспонента e^x через ряд Тейлора
 function exp(x) {
   let sum = 1,
     term = 1;

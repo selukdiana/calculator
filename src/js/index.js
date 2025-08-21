@@ -12,10 +12,6 @@ import '../css/calculator.css';
 
 // -------------- Client + Invoker --------------
 
-// ----------------------
-// Client + Invoker
-// ----------------------
-
 const calc = new Calculator();
 const display = document.getElementById('display');
 
@@ -52,7 +48,7 @@ const opSymbols = {
   yRoot: 'root',
 };
 
-// Обёртка: выполнить команду и сохранить её в истории
+// Выполнить команду и сохранить её в истории
 const run = (cmd) => {
   try {
     cmd.execute();
@@ -95,7 +91,6 @@ document.querySelectorAll('.number').forEach((btn) =>
     const cmd = new SetCommand(calc, currentInput);
 
     run(cmd);
-    // render();
   }),
 );
 
@@ -121,7 +116,6 @@ document.getElementById('btn-equals').addEventListener('click', () => {
   saveSnapshot();
   if (!run(calc.pendingCmd)) return;
   currentInput = calc.leftOperand.toString();
-  // render();
 });
 
 // Унарные функции, константы, % и ±
@@ -134,7 +128,6 @@ document.querySelectorAll('.func').forEach((btn) =>
 
     if (!run(cmd)) return;
     currentInput = '';
-    // render();
   }),
 );
 
