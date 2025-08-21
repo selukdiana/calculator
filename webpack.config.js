@@ -26,10 +26,10 @@ module.exports = (env) => {
     },
     devServer: isDev
       ? {
-        port: 5000,
-        open: true,
-        watchFiles: path.resolve(__dirname, 'src'),
-      }
+          port: 5000,
+          open: true,
+          watchFiles: path.resolve(__dirname, 'src'),
+        }
       : undefined,
   };
 };

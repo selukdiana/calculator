@@ -2,28 +2,30 @@
 
 ## 1. Task
 
-[Innowise Lab Internship_ Level 0_ Custom calculator.pdf](https://github.com/user-attachments/files/21856136/Innowise.Lab.Internship_.Level.0_.Custom.calculator.1.1.pdf)
-
+[Innowise Lab Internship* Level 0* Custom calculator.pdf](https://github.com/user-attachments/files/21856136/Innowise.Lab.Internship_.Level.0_.Custom.calculator.1.1.pdf)
 
 ## 2. Description
 
 This project implements a Scientific Calculator that goes beyond basic arithmetic to include advanced mathematical functions and constants:
 
 ### Arithmetic & Power
-* Addition, subtraction, multiplication, division
-* Exponentiation (tenPowerX, EE)
-* Arbitrary-degree roots (yRoot), square root, cube root
+
+- Addition, subtraction, multiplication, division
+- Exponentiation (tenPowerX, EE)
+- Arbitrary-degree roots (yRoot), square root, cube root
 
 ### Logarithms & Constants
-* Natural logarithm (ln)
-* Base-10 logarithm (log10)
-* Mathematical constants: e (e()), π (pi())
+
+- Natural logarithm (ln)
+- Base-10 logarithm (log10)
+- Mathematical constants: e (e()), π (pi())
 
 ### Utility Functions
-* Reciprocal (reciprocal)
-* Percent conversion (percent)
-* Sign inversion (changeSign)
-* Random number generator (rand)
+
+- Reciprocal (reciprocal)
+- Percent conversion (percent)
+- Sign inversion (changeSign)
+- Random number generator (rand)
 
 For more details, please refer to the task document.
 
