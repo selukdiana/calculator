@@ -1,8 +1,8 @@
-// Константы
-export const PI = 3.141592653589793;
+import { PI } from './constants';
+
+// Constants
 const TWO_PI = PI * 2;
-export const E = 2.718281828459045;
-const DEG_TO_RAD = PI / 180; // Конверсия градусов в радианы
+const DEG_TO_RAD = PI / 180; // Conversion from degrees to radians
 
 function randomNumber() {
   let seed = 12345;
@@ -15,26 +15,33 @@ function randomNumber() {
 export const random = randomNumber();
 
 export function log(base, num) {
+  // Type conversion and domain checks: base>0, base!==1, num>0
+  const b = Number(base);
+  const x = Number(num);
+  if (!Number.isFinite(b) || !Number.isFinite(x))
+    throw new Error('Input error');
+  if (b <= 0 || b === 1 || x <= 0) throw new Error('Input error');
+
   let start = 0;
   let end = 0;
   let middle = 0;
-  const accuracy = 10; //сколько знаков после запятой
-  while (base ** end < +num) end++;
+  const accuracy = 10; // number of decimal places
+  while (b ** end < x) end++;
   start = end - 1;
-  if (base ** start === num) return start;
+  if (b ** start === x) return start;
   for (let i = 0; i < accuracy * 10; i++) {
-    // находим серединное значение
+    // find the middle value
     middle = (start + end) / 2;
 
-    // если основание в этой степени больше нашего числа, то сдвигаем к середине конечную границу
-    if (base ** middle > num) {
+    // if the base to this power is greater than our number, move the end boundary toward the middle
+    if (b ** middle > x) {
       end = middle;
     }
-    // если основание в этой степени меньше нашего числа, то сдвигаем к середине начальную границу
-    else if (base ** middle < num) {
+    // if the base to this power is less than our number, move the start boundary toward the middle
+    else if (b ** middle < x) {
       start = middle;
     }
-    // если основание в этой степени равно нашему числу
+    // if the base to this power equals our number
     else {
       return middle;
     }
@@ -42,12 +49,12 @@ export function log(base, num) {
   return (start + end) / 2;
 }
 
-// Сводим угол в [-π, +π] для лучшей сходимости рядов
+// Normalize angle to [-π, +π] for better series convergence
 function normalizeAngle(x) {
-  //возьмём остаток от деления на 2π
-  const k = (x / TWO_PI) | 0; // усечение до целой части (влево/вправо сдвигом)
+  // take the remainder of division by 2π
+  const k = (x / TWO_PI) | 0; // truncation to integer part (left/right shift)
   let r = x - k * TWO_PI;
-  // приводим в [-π, π]
+  // bring to [-π, π]
   if (r > PI) r -= TWO_PI;
   if (r < -PI) r += TWO_PI;
   return r;
@@ -57,12 +64,12 @@ function normalizeResult(x) {
   return parseFloat(x.toFixed(5));
 }
 
-// Конвертировать градусы в радианы
+// Convert degrees to radians
 function toRadians(degrees) {
   return degrees * DEG_TO_RAD;
 }
 
-// Экспонента e^x через ряд Тейлора
+// Exponential e^x using Taylor series
 function exp(x) {
   let sum = 1,
     term = 1;
@@ -73,7 +80,7 @@ function exp(x) {
   return sum;
 }
 
-// Синус по ряду Тейлора
+// Sine using Taylor series
 export function sin(x, inDegrees = false) {
   if (inDegrees) {
     x = toRadians(x);
@@ -89,7 +96,7 @@ export function sin(x, inDegrees = false) {
   return normalizeResult(sum);
 }
 
-// Косинус по ряду Тейлора
+// Cosine using Taylor series
 export function cos(x, inDegrees = false) {
   if (inDegrees) {
     x = toRadians(x);
@@ -104,13 +111,13 @@ export function cos(x, inDegrees = false) {
   return normalizeResult(sum);
 }
 
-// Тангенс через синус и косинус
+// Tangent through sine and cosine
 export function tan(x, inDegrees = false) {
   const res = sin(x, inDegrees) / cos(x, inDegrees);
   return normalizeResult(res);
 }
 
-// Гиперболический синус
+// Hyperbolic sine
 export function sinh(x) {
   // (eˣ − e⁻ˣ)/2
   const ex = exp(x);
@@ -118,7 +125,7 @@ export function sinh(x) {
   return (ex - emx) / 2;
 }
 
-// Гиперболический косинус
+// Hyperbolic cosine
 export function cosh(x) {
   // (eˣ + e⁻ˣ)/2
   const ex = exp(x);
@@ -126,10 +133,10 @@ export function cosh(x) {
   return (ex + emx) / 2;
 }
 
-// Гиперболический тангенс
+// Hyperbolic tangent
 export function tanh(x) {
   // sinh/cosh
   const e2x = exp(2 * x);
-  // более стабильная форма: (e2x - 1)/(e2x + 1)
+  // more stable form: (e2x - 1)/(e2x + 1)
   return (e2x - 1) / (e2x + 1);
 }

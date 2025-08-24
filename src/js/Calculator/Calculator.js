@@ -1,4 +1,6 @@
-import { random, PI, E, log, sin, cos, tan, sinh, cosh, tanh } from './math';
+import { random, log, sin, cos, tan, sinh, cosh, tanh } from '../utils/math.js';
+import { PI, E } from '../utils/constants.js';
+
 export class Calculator {
   constructor() {
     this.memory = 0;
@@ -77,7 +79,7 @@ export class Calculator {
   factorial(x) {
     let n = parseInt(x),
       res = 1;
-    if (n < 0) throw new Error('Ошибка ввода');
+    if (n < 0) throw new Error('Input error');
     for (let i = 1; i <= n; i++) res *= i;
     return res;
   }
@@ -134,5 +136,42 @@ export class Calculator {
     this.rightOperand = null;
     this.operator = null;
     this.pendingCmd = null;
+  }
+
+  // Helpers for operands parsing and setting
+  getLeftNumber() {
+    return parseFloat(this.leftOperand);
+  }
+  getRightNumber() {
+    return parseFloat(this.rightOperand);
+  }
+  setLeftValue(value) {
+    this.leftOperand = value;
+  }
+  setRightValue(value) {
+    this.rightOperand = value;
+  }
+
+  // Snapshot (Memento) API
+  createSnapshot(currentInput) {
+    return {
+      currentInput,
+      memory: this.memory,
+      leftOperand: this.leftOperand,
+      rightOperand: this.rightOperand,
+      operator: this.operator,
+      pendingCmd: this.pendingCmd,
+      isDegrees: this.isDegrees,
+    };
+  }
+
+  restoreSnapshot(snapshot) {
+    this.leftOperand = snapshot.leftOperand;
+    this.rightOperand = snapshot.rightOperand;
+    this.operator = snapshot.operator;
+    this.pendingCmd = snapshot.pendingCmd;
+    this.memory = snapshot.memory;
+    this.isDegrees = snapshot.isDegrees ?? this.isDegrees;
+    return snapshot.currentInput;
   }
 }

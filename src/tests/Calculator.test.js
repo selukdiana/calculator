@@ -1,7 +1,6 @@
-// tests/Calculator.test.js
-
 import { Calculator } from '../js/Calculator';
-import { E, PI } from '../js/math';
+import { E, PI } from '../js/utils/constants';
+import { PercentCommand } from '../js/Command';
 
 describe('Calculator', () => {
   let calculator;
@@ -70,7 +69,7 @@ describe('Calculator', () => {
 
   test('should calculate e raised to the power x', () => {
     const result = calculator.ePowerX(1); // e^1
-    expect(result).toBeCloseTo(2.718, 3); // Поскольку E ≈ 2.718
+    expect(result).toBeCloseTo(2.718, 3); // E ≈ 2.718
   });
 
   test('should calculate factorial for x >= 0', () => {
@@ -79,7 +78,7 @@ describe('Calculator', () => {
   });
 
   test('shouldnt calculate factorial for x < 0', () => {
-    expect(() => calculator.factorial(-5)).toThrowError('Ошибка ввода');
+    expect(() => calculator.factorial(-5)).toThrowError('Input error');
   });
 
   test('should calculate sine', () => {
@@ -181,9 +180,64 @@ describe('Calculator', () => {
     expect(calculator.log10(100)).toBeCloseTo(2, 10);
   });
   test('should return e', () => {
-    expect(calculator.e(123)).toBeCloseTo(E, 10);
+    expect(calculator.e()).toBeCloseTo(E, 10);
   });
   test('should return π', () => {
-    expect(calculator.pi(0)).toBeCloseTo(PI, 10);
+    expect(calculator.pi()).toBeCloseTo(PI, 10);
+  });
+
+  // Percent behavior via Command pattern
+  test('percent with add uses left * (right/100) as right', () => {
+    const calc = new Calculator();
+    calc.set(200);
+    calc.operator = 'add';
+    calc.set(10); // 10%
+    const cmd = new PercentCommand(calc);
+    cmd.execute();
+    expect(calc.rightOperand).toBe(20); // 200 * 10%
+  });
+
+  test('percent with subtract uses left * (right/100) as right', () => {
+    const calc = new Calculator();
+    calc.set(200);
+    calc.operator = 'subtract';
+    calc.set(25); // 25%
+    const cmd = new PercentCommand(calc);
+    cmd.execute();
+    expect(calc.rightOperand).toBe(50); // 200 * 25%
+  });
+
+  test('percent with multiply converts to left * (right/100) and clears op', () => {
+    const calc = new Calculator();
+    calc.set(300);
+    calc.operator = 'multiply';
+    calc.set(10); // 10%
+    const cmd = new PercentCommand(calc);
+    cmd.execute();
+    expect(calc.leftOperand).toBe(30); // 300 * 10%
+    expect(calc.rightOperand).toBeNull();
+    expect(calc.operator).toBeNull();
+  });
+
+  // Snapshot/Undo style behavior using Calculator memento API
+  test('snapshot/undo restores previous calculator state', () => {
+    const calc = new Calculator();
+    let currentInput = '0';
+
+    const snapshot = calc.createSnapshot(currentInput);
+
+    // mutate state
+    calc.set(5);
+    calc.operator = 'add';
+    calc.set(7);
+    currentInput = '7';
+
+    // restore snapshot (undo)
+    currentInput = calc.restoreSnapshot(snapshot);
+
+    expect(calc.leftOperand).toBe('0');
+    expect(calc.rightOperand).toBeNull();
+    expect(calc.operator).toBeNull();
+    expect(currentInput).toBe('0');
   });
 });
